@@ -22,13 +22,13 @@ def overlap(x1, x2, y1=None, y2=None):
         return x2 - x1
 
     if y1 is None:
-        y1 = time.min
+        y1 = Time.min
 
     if x1 == x2 or y1 == y2:
         return timedelta(0)
 
     if y2 is None:
-        y2 = time.max
+        y2 = Time.max
 
     if not _is_overlapping(x1, x2, y1, y2):
         raise ValueError("Intervals does not overlaps")
@@ -36,7 +36,7 @@ def overlap(x1, x2, y1=None, y2=None):
     return min(x2, y2) - max(x1, y1)
 
 
-class time(dt.time):
+class Time(dt.time):
     def seconds(self):
         return self.hour * 3600 + self.minute * 60 + self.second
 
@@ -45,50 +45,58 @@ class time(dt.time):
         secs = seconds % 60
         mins = int(seconds / 60) % 60
         hours = int(seconds / 3600) % 24
-        return time(hours, mins, secs)
+        return Time(hours, mins, secs)
 
     @staticmethod
     def from_time(dtime):
-        return time(dtime.hour, dtime.minute, dtime.second)
+        return Time(dtime.hour, dtime.minute, dtime.second)
 
     @staticmethod
     def from_dt(dtime):
-        return time.from_time(dtime.time())
+        return Time.from_time(dtime.time())
 
     def __sub__(self, other):
         return timedelta(seconds=self.seconds() - other.seconds())
 
     def __rsub__(self, other):
-        return time.from_time(other) - self
+        return Time.from_time(other) - self
 
 
-class workingtime:
+class WorkingTime:
     def __init__(self, weekends=None, holidays=None):
         # TODO check the variables
         self.weekends = weekends
         self.holidays = holidays
 
-    def workingtime(self, start, end, workhours=None):
-        if workhours is None:
-            workhours = (time(8), time(16))
+    def working_time(self, start, end, work_hours=None):
+        if work_hours is None:
+            work_hours = (Time(8), Time(16))
 
-        workhours = (time.from_time(workhours[0]), time.from_time(workhours[1]))
-
+        work_hours = (Time.from_time(work_hours[0]),
+                      Time.from_time(work_hours[1]))
 
         # If start > end, workingtime will be negative
         if start > end:
-            return -1 * self.workingtime(end, start, workhours)
-        # If the day changes between your workhours, its easier to calculate the time your note working and substract
-        if workhours[0] > workhours[1]:
-            return (end - start) - self.workingtime(start, end, (workhours[1], workhours[0]))
+            return -1 * self.working_time(end, start, work_hours)
 
-        # If the start time and the end time are the same we return the workhours * days between
-        # But it can't be done like this because start date or end date could be weekend or holiday
+        # If the day changes between your workhours, its easier to calculate
+        # the time your note working and substract
+        if work_hours[0] > work_hours[1]:
+            return ((end - start) -
+                    self.working_time(start, end,
+                                      tuple(reversed(work_hours))))
+
+        # If the start time and the end time are the same we
+        # return the workhours * days between. But it can't be done
+        # like this because start date or end date could be weekend or holiday
 
         if start.date() == end.date():
             # TODO implementar esta  cosica
-            return overlap(time.from_dt(start), time.from_dt(end), *workhours)
+            return overlap(Time.from_dt(start), Time.from_dt(end), *work_hours)
 
-        middle_time = len(_dates_between_dates(start, end)) * (workhours[1] - workhours[0])
+        middle_time = (len(_dates_between_dates(start, end)) *
+                       (work_hours[1] - work_hours[0]))
 
-        return overlap(*workhours, time.from_dt(start)) + middle_time + overlap(*workhours, None, time.from_dt(end))
+        return (overlap(*work_hours, Time.from_dt(start)) +
+                middle_time +
+                overlap(*work_hours, None, Time.from_dt(end)))

@@ -1,9 +1,10 @@
 import unittest
 
 import numpy as np
-from datetime import timedelta, datetime, time
-from workingtime import _dates_between_dates
-from workingtime import workingtime
+from datetime import timedelta, datetime
+from workingtime.workingtime import _dates_between_dates
+from workingtime import WorkingTime, Time
+
 
 class InitialTest(unittest.TestCase):
 
@@ -16,14 +17,17 @@ class InitialTest(unittest.TestCase):
         np.testing.assert_array_equal(
             _dates_between_dates(now, now + day), [])
         np.testing.assert_array_equal(
-            _dates_between_dates(now, now+ 2*day),
+            _dates_between_dates(now, now + 2 * day),
             [now + day])
 
     def test_another_test(self):
-        st = workingtime()
+        wt = WorkingTime()
         np.testing.assert_equal(
-            st.workingtime(datetime(2020, 10, 3, 1), datetime(2020, 10, 4, 23), (time(22, 0), time(0, 30))).total_seconds(),
-            (2.5 + 1)*3600)
+            wt.working_time(datetime(2020, 10, 3, 1),
+                           datetime(2020, 10, 4, 23),
+                           (Time(22, 0), Time(0, 30))).total_seconds(),
+            (2.5 + 1) * 3600)
+
 
 if __name__ == '__main__':
     print()

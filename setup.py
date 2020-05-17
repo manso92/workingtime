@@ -18,11 +18,11 @@ with open(os.path.join(os.path.dirname(__file__),
                        'VERSION'), 'r') as version_file:
     version = version_file.read().strip()
 
-setup(name='worktime',
+setup(name='workingtime',
       version=version,
       description=DOCLINES[1],
       long_description="\n".join(DOCLINES[3:]),
-      url='https://worktime.readthedocs.io',
+      url='https://workingtime.readthedocs.io',
       maintainer='Pablo Manso',
       maintainer_email='92manso@gmail.com',
       include_package_data=True,

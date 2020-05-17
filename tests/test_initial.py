@@ -1,14 +1,29 @@
 import unittest
 
 import numpy as np
+from datetime import timedelta, datetime, time
+from workingtime import _dates_between_dates
+from workingtime import workingtime
 
 class InitialTest(unittest.TestCase):
 
-    # def setUp(self): could be defined for set up before any test
+    def test_dates_between_dates(self):
+        now = datetime.now()
+        day = timedelta(1)
 
-    def test_sample(self):
-        np.testing.assert_allclose([0], [0])
+        np.testing.assert_array_equal(
+            _dates_between_dates(now, now), [])
+        np.testing.assert_array_equal(
+            _dates_between_dates(now, now + day), [])
+        np.testing.assert_array_equal(
+            _dates_between_dates(now, now+ 2*day),
+            [now + day])
 
+    def test_another_test(self):
+        st = workingtime()
+        np.testing.assert_equal(
+            st.workingtime(datetime(2020, 10, 3, 1), datetime(2020, 10, 4, 23), (time(22, 0), time(0, 30))).total_seconds(),
+            (2.5 + 1)*3600)
 
 if __name__ == '__main__':
     print()

@@ -37,8 +37,8 @@ install:
 script:
     - |
       if [[ $PEP8COVERAGE == true ]]; then
-        flake8 --exit-zero worktime;
-        coverage run --source=worktime/ setup.py test;
+        flake8 --exit-zero workingtime;
+        coverage run --source=workingtime/ setup.py test;
       else
         python3 setup.py test || python setup.py test;
       fi

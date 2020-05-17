@@ -14,7 +14,7 @@ A clear and concise description of what the bug is.
 Code to reproduce the behavior:
 
 ```python
-import worktime
+import workingtime
 ...
 
 ```
@@ -26,7 +26,7 @@ A clear and concise description of what you expected to happen, results or figur
 **Version information**
  - OS: [e.g. Linux, MacOs, Windows]
  - Python version: [e.g. 3.6, 3.7]
- - worktime version: [e.g. develop, 0.23]
+ - workingtime version: [e.g. develop, 0.23]
  - Version of other packages involved [e.g. numpy, scipy, matplotlib, ... ]
 
 **Additional context**

@@ -2,8 +2,8 @@ import unittest
 
 import numpy as np
 from datetime import timedelta, datetime, time
-from worktime import _dates_between_dates
-from worktime import WorkTime
+from workingtime import _dates_between_dates
+from workingtime import workingtime
 
 class InitialTest(unittest.TestCase):
 
@@ -20,9 +20,9 @@ class InitialTest(unittest.TestCase):
             [now + day])
 
     def test_another_test(self):
-        st = WorkTime()
+        st = workingtime()
         np.testing.assert_equal(
-            st.worktime(datetime(2020, 10, 3, 1), datetime(2020, 10, 4, 23), (time(22, 0), time(0, 30))).total_seconds(),
+            st.workingtime(datetime(2020, 10, 3, 1), datetime(2020, 10, 4, 23), (time(22, 0), time(0, 30))).total_seconds(),
             (2.5 + 1)*3600)
 
 if __name__ == '__main__':

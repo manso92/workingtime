@@ -62,25 +62,25 @@ class time(dt.time):
         return time.from_time(other) - self
 
 
-class WorkTime:
+class workingtime:
     def __init__(self, weekends=None, holidays=None):
         # TODO check the variables
         self.weekends = weekends
         self.holidays = holidays
 
-    def worktime(self, start, end, workhours=None):
+    def workingtime(self, start, end, workhours=None):
         if workhours is None:
             workhours = (time(8), time(16))
 
         workhours = (time.from_time(workhours[0]), time.from_time(workhours[1]))
 
 
-        # If start > end, worktime will be negative
+        # If start > end, workingtime will be negative
         if start > end:
-            return -1 * self.worktime(end, start, workhours)
+            return -1 * self.workingtime(end, start, workhours)
         # If the day changes between your workhours, its easier to calculate the time your note working and substract
         if workhours[0] > workhours[1]:
-            return (end - start) - self.worktime(start, end, (workhours[1], workhours[0]))
+            return (end - start) - self.workingtime(start, end, (workhours[1], workhours[0]))
 
         # If the start time and the end time are the same we return the workhours * days between
         # But it can't be done like this because start date or end date could be weekend or holiday

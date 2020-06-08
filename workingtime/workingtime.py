@@ -31,7 +31,7 @@ def overlap(x1, x2, y1=None, y2=None):
         y2 = Time.max
 
     if not _is_overlapping(x1, x2, y1, y2):
-        raise ValueError("Intervals does not overlaps")
+        return timedelta(0)
 
     return min(x2, y2) - max(x1, y1)
 

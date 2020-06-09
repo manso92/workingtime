@@ -1,65 +1,5 @@
-import pandas as pd
-import datetime as dt
-from datetime import timedelta
-
-
-def _dates_between_dates(start, end):
-    return list(pd.date_range(start + timedelta(1),
-                              end - timedelta(1),
-                              freq='d'))
-
-
-def _is_overlapping(x1, x2, y1, y2):
-    return not (x1 > y2 or y1 > x2)
-
-
-def _is_overlapping_bis(x1, x2, y1, y2):
-    return not (max(x1, y1) <= min(x2, y2))
-
-
-def overlap(x1, x2, y1=None, y2=None):
-    if y1 is None and y2 is None:
-        return x2 - x1
-
-    if y1 is None:
-        y1 = Time.min
-
-    if x1 == x2 or y1 == y2:
-        return timedelta(0)
-
-    if y2 is None:
-        y2 = Time.max
-
-    if not _is_overlapping(x1, x2, y1, y2):
-        return timedelta(0)
-
-    return min(x2, y2) - max(x1, y1)
-
-
-class Time(dt.time):
-    def seconds(self):
-        return self.hour * 3600 + self.minute * 60 + self.second
-
-    @staticmethod
-    def from_seconds(seconds):
-        secs = seconds % 60
-        mins = int(seconds / 60) % 60
-        hours = int(seconds / 3600) % 24
-        return Time(hours, mins, secs)
-
-    @staticmethod
-    def from_time(dtime):
-        return Time(dtime.hour, dtime.minute, dtime.second)
-
-    @staticmethod
-    def from_dt(dtime):
-        return Time.from_time(dtime.time())
-
-    def __sub__(self, other):
-        return timedelta(seconds=self.seconds() - other.seconds())
-
-    def __rsub__(self, other):
-        return Time.from_time(other) - self
+from .misc import *
+from .wtime import WTime
 
 
 class WorkingTime:
@@ -70,10 +10,10 @@ class WorkingTime:
 
     def working_time(self, start, end, work_hours=None):
         if work_hours is None:
-            work_hours = (Time(8), Time(16))
+            work_hours = (WTime(8), WTime(16))
 
-        work_hours = (Time.from_time(work_hours[0]),
-                      Time.from_time(work_hours[1]))
+        work_hours = (WTime.from_time(work_hours[0]),
+                      WTime.from_time(work_hours[1]))
 
         # If start > end, workingtime will be negative
         if start > end:
@@ -92,11 +32,11 @@ class WorkingTime:
 
         if start.date() == end.date():
             # TODO implementar esta  cosica
-            return overlap(Time.from_dt(start), Time.from_dt(end), *work_hours)
+            return overlap(WTime.from_dt(start), WTime.from_dt(end), *work_hours)
 
-        middle_time = (len(_dates_between_dates(start, end)) *
+        middle_time = (len(dates_between_dates(start, end)) *
                        (work_hours[1] - work_hours[0]))
 
-        return (overlap(*work_hours, Time.from_dt(start)) +
+        return (overlap(*work_hours, WTime.from_dt(start)) +
                 middle_time +
-                overlap(*work_hours, None, Time.from_dt(end)))
+                overlap(*work_hours, None, WTime.from_dt(end)))

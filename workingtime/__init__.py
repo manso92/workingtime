@@ -5,7 +5,7 @@
 """
 import errno as _errno
 
-from .workingtime import WorkingTime, Time
+from .workingtime import WorkingTime, WTime
 
 import os as _os
 

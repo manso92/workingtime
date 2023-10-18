@@ -4,9 +4,7 @@ from datetime import timedelta
 
 
 def _dates_between_dates(start, end):
-    return list(pd.date_range(start + timedelta(1),
-                              end - timedelta(1),
-                              freq='d'))
+    return [start + timedelta(1) * x for x in range(1, (end-start).days)]
 
 
 def _is_overlapping(x1, x2, y1, y2):

@@ -6,20 +6,44 @@ from workingtime.workingtime import _dates_between_dates
 from workingtime import WorkingTime, Time
 
 
-class InitialTest(unittest.TestCase):
+class DatesBetweenDates(unittest.TestCase):
 
-    def test_dates_between_dates(self):
+    def test_normal_use(self):
+        now = datetime.now()
+        day = timedelta(1)
+
+
+        np.testing.assert_array_equal(
+            _dates_between_dates(now, now + 2 * day),
+            [now + day],
+            "Error finding day between two non correlative days"
+        )
+        np.testing.assert_array_equal(
+            _dates_between_dates(now, now + 4 * day),
+            [now + x * day for x in range(1, 4)],
+            "Error finding day between two non correlative days"
+        )
+
+    def test_same_dates(self):
         now = datetime.now()
         day = timedelta(1)
 
         np.testing.assert_array_equal(
-            _dates_between_dates(now, now), [])
-        np.testing.assert_array_equal(
-            _dates_between_dates(now, now + day), [])
-        np.testing.assert_array_equal(
-            _dates_between_dates(now, now + 2 * day),
-            [now + day])
+            _dates_between_dates(now, now), [],
+            "Error calculating empty distance"
+        )
 
+    def test_consecutive_dates(self):
+        now = datetime.now()
+        day = timedelta(1)
+
+        np.testing.assert_array_equal(
+            _dates_between_dates(now, now + day), [],
+            "Error calculating consecutive dates"
+        )
+
+
+class Initialclass (unittest.TestCase):
     def test_another_test(self):
         wt = WorkingTime()
         np.testing.assert_equal(
